@@ -10,7 +10,7 @@ from .models import Movie, Category, Actor, Genre, Rating, Reviews
 from .forms import ReviewForm
 
 
-class MoviesView(GenreYear, ListView):
+class MoviesView(ListView):
     # Список фільмів
     model = Movie
     queryset = Movie.objects.filter(draft=False)
@@ -26,5 +26,12 @@ class MovieDetailView(DetailView):
 class AddReview(View):
     # Відгуки
     def post(self, request, pk):
-        print(request.POST)
-        return redirect("/")
+        form = ReviewForm(request.POST)
+        movie = Movie.objects.get(id=pk)
+        if form.is_valid():
+            form = form.save(commit=False)
+            if request.POST.get("parent", None):
+                form.parent_id = int(request.POST.get("parent"))
+            form.movie = movie
+            form.save()
+        return redirect(movie.get_absolute_url())

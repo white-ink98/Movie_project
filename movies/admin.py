@@ -2,7 +2,11 @@ from django.contrib import admin
 from .models import Category, Genre, Movie, MovieShots, Actor, RatingStar, Reviews
 
 
-admin.site.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "url", "id")
+
+
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Genre)
 admin.site.register(Movie)
 admin.site.register(MovieShots)
