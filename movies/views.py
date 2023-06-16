@@ -1,18 +1,24 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.base import View
 
 from .models import Movie
 
 
-class MoviesView(View):
+class MoviesView(GenreYear, ListView):
     # Список фільмів
-    def get(self, request):
-        movies = Movie.objects.all()
-        return render(request, "movies/movie_list.html", {"movie_list": movies})
+    model = Movie
+    queryset = Movie.objects.filter(draft=False)
 
 
-class MovieDetailView(View):
+class MovieDetailView(DetailView):
     # Повний опис
-    def get(self, request, pk):
-        movie = Movie.objects.get(id=pk)
-        return render(request, "movies/movie_detail.html", {"movie": movie})
+    model = Movie
+    queryset = Movie.objects.filter(draft=False)
+    slug_field = "url"
+
+
+class AddReview(View):
+    # Відгуки
+    def post(self, request, pk):
+        print(request.POST)
+        return redirect("/")
