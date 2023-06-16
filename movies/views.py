@@ -1,7 +1,13 @@
-from django.shortcuts import render, redirect
+from django.conf import settings
+from django.db import models
+from django.db.models import Q, OuterRef, Subquery, Case, When
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import redirect
+from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 
-from .models import Movie
+from .models import Movie, Category, Actor, Genre, Rating, Reviews
+from .forms import ReviewForm
 
 
 class MoviesView(GenreYear, ListView):
